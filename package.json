@@ -1,0 +1,30 @@
+{
+  "name": "brainx",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/harshitvashisht/BrainX.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/harshitvashisht/BrainX/issues"
+  },
+  "homepage": "https://github.com/harshitvashisht/BrainX#readme",
+  "keywords": [],
+  "description": "",
+  "devDependencies": {
+    "@types/express": "github:types/express",
+    "@types/jsonwebtoken": "^9.0.9",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.13.2"
+  }
+}
