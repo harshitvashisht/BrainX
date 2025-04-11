@@ -18,13 +18,23 @@
   "keywords": [],
   "description": "",
   "devDependencies": {
-    "@types/express": "github:types/express",
+    "@types/bcrypt": "^5.0.2",
+    "@types/express": "^5.0.1",
     "@types/jsonwebtoken": "^9.0.9",
+    "@types/typescript": "^2.0.0",
     "typescript": "^5.8.3"
   },
   "dependencies": {
+    "@types/cors": "^2.8.17",
+    "bcrypt": "^5.1.1",
+    "config": "^3.3.12",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.13.2"
+    "mongodb": "^6.15.0",
+    "mongoose": "^8.13.2",
+    "ts-node": "^10.9.2",
+    "zod": "^3.24.2"
   }
 }
