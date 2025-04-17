@@ -2,12 +2,14 @@ import  express from "express";
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken";
 import {JWT_SECRET} from "./config"
-import { UserModel } from "./db";
-import { any } from "zod";
+import { ContentModeal, UserModel } from "./db";
+import cors from "cors"
+import { userMiddleware } from "./middleware";
 
 
 const app = express(); 
 app.use(express.json())
+app.use (cors())
 
 
 const PORT = 3000;
@@ -17,7 +19,8 @@ const PORT = 3000;
 // declaration file = file provide types to typeless libraries such as express 
  
 async function main() {
-    await mongoose.connect("mongodb+srv://ProjectXuser:Harshit123@brainx.81epndf.mongodb.net/?retryWrites=true&w=majority&appName=BrainX")
+    
+    await mongoose.connect()
     .then (()=>console.log("connnected to mongodb"))
     .catch((err)=> console.log("failed to connect to mongoDB"))
 }
@@ -54,6 +57,17 @@ app.post('/api/v1/signin' , async (req , res)=>{
      }
 })
 
+app.post('/api/v1/content' , userMiddleware, async (req , res )=>{
+     const {link , title, userId} = req.body
+
+     await ContentModeal.create ({
+        title ,
+        link , 
+        userId : req.userId, 
+        tags: []
+     })
+     res.json({messagge: "Content Added"})
+})
 
 main()
 
