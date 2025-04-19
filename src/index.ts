@@ -2,9 +2,10 @@ import  express from "express";
 import mongoose from "mongoose"
 import jwt from "jsonwebtoken";
 import {JWT_SECRET} from "./config"
-import { ContentModeal, UserModel } from "./db";
+import {ContentModel, LinkModel, UserModel } from "./db";
 import cors from "cors"
 import { userMiddleware } from "./middleware";
+import { random } from "./utils";
 
 
 const app = express(); 
@@ -20,7 +21,7 @@ const PORT = 3000;
  
 async function main() {
     
-    await mongoose.connect()
+    await mongoose.connect("")
     .then (()=>console.log("connnected to mongodb"))
     .catch((err)=> console.log("failed to connect to mongoDB"))
 }
@@ -60,7 +61,7 @@ app.post('/api/v1/signin' , async (req , res)=>{
 app.post('/api/v1/content' , userMiddleware, async (req , res )=>{
      const {link , title, userId} = req.body
 
-     await ContentModeal.create ({
+     await ContentModel.create ({
         title ,
         link , 
         userId : req.userId, 
@@ -68,7 +69,80 @@ app.post('/api/v1/content' , userMiddleware, async (req , res )=>{
      })
      res.json({messagge: "Content Added"})
 })
+app.get('/api/v1/content' , userMiddleware , async(req , res , next )=>{
+   
+    const userId = req.userId ; 
+    
+    const content = await ContentModel.find({userId: userId}).populate("userId","username")
+    res.json(content);
+})
 
+app.delete('/api/v1/content' , userMiddleware , async(req , res , next )=>{
+    const ObjectId = req.body.ObjectId;
+
+    await ContentModel.deleteMany({
+        ObjectId,
+        userId: req.userId
+    })
+    res.json({message : "Content Deleted"})
+    
+})
+
+app.post ('/api/v1/brain/share' , userMiddleware , async (req , res ,next)=>{
+       const share = req.body.share
+       
+       if(share){
+        const exitingLink = await LinkModel.findOne({
+            userId:req.userId
+        })
+        if (exitingLink){
+           res.json({
+                hash: exitingLink.hash
+            });
+            return 
+        }
+    const hash = random(10)
+       await  LinkModel.create({
+            userId: req.userId,
+            hash: hash
+        });
+        res.json({
+            hash
+        });
+       }else{
+       await LinkModel.deleteOne({userId: req.userId})
+       }
+       res.json({
+        message: "Updated Sharable link"
+       })
+})
+app.get('/api/v1/brain/:shareLink',userMiddleware,async (req,res,next)=>{
+    const hash = req.params.shareLink;
+
+   const link =  await LinkModel.findOne({
+        hash
+    })
+    if(!link){
+        res.status(411).json({
+            message: "Sorry Incorrect Input"
+        })
+        return;
+    }
+    const content = await ContentModel.find({userId:link.userId})
+    const user = await UserModel.findOne({
+        _id: link.userId
+    })
+    if(!user){
+        res.status(411).json({
+            message: "Fatal Error"
+        })
+        return;
+    }
+    res.json ({
+        username : user?.username,
+        content: content
+    })
+})
 main()
 
 app.listen (PORT, ()=>{

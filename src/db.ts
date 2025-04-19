@@ -1,7 +1,7 @@
 import mongoose, {Schema , model}  from "mongoose";
 import { string } from "zod";
 
-mongoose.connect()
+mongoose.connect("")
 
 const UserSchema = new Schema ({
     username: {type: String , require: true , unique : true },
@@ -21,4 +21,11 @@ const ContentSchema = new Schema ({
      }]
 })
 
-export const ContentModeal = model ('Content' , ContentSchema)
+export const ContentModel = model ('Content' , ContentSchema)
+
+const LinkSchema = new Schema ({
+    hash: String, 
+    userId : {type: mongoose.Types.ObjectId , ref : 'User' , require : true ,unique: true}
+})
+
+export const LinkModel = model('Link', LinkSchema)
