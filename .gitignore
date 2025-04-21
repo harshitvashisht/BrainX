@@ -1,11 +1,4 @@
 dist
+
+
 node_modules/
-DS_Store
-npm-debug.log*
-.env
-dist/
-.vscode/
-*.log
-.Trash/
-*.zip
-.env
